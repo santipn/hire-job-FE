@@ -26,7 +26,7 @@ const SigninLayout = () => {
                             </div>
                             <Link href="/auth/reset"><a className={`text-decoration-none d-flex justify-content-end my-3 ${styles.pAuth}`}>Lupa Kata Sandi?</a></Link>
                             <button type="submit" className="btn btn-secondary w-100">Masuk</button>
-                            <p className="my-5 text-center">Anda belum punya akun? <Link href={'/auth/perekrut'}><a className="text-decoration-none">Perekrut</a></Link> / <Link href={'/auth/pelamar'}><a className="text-decoration-none">Pelamar</a></Link> </p>
+                            <p className="my-5 text-center">Anda belum punya akun? <Link href={'/auth/signup'}><a className="text-decoration-none">Daftar Disini</a></Link></p>
                         </form>
                     </div>
                 </div>

@@ -37,8 +37,7 @@ const PekerjaLayout = () => {
                                 <input type="password" className="form-control" id="KataSandi" name="password" placeholder="Masukan konfirmasi kata sandi anda" />
                             </div>
                             <button type="submit" className="btn btn-secondary w-100">Daftar</button>
-                            <p className="mt-5 text-center">Daftar sebagai perekrut? <Link href={'/auth/perekrut'}><a className="text-decoration-none">Daftar!</a></Link></p>
-                            <p className="text-center">Anda sudah punya akun? <Link href={'/auth'}><a className="text-decoration-none">Masuk disini!</a></Link></p>
+                            <p className="my-3 text-center">Anda sudah punya akun? <Link href={'/auth'}><a className="text-decoration-none">Masuk disini!</a></Link></p>
                         </form>
                     </div>
                 </div>

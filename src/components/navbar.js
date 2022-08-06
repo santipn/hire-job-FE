@@ -15,7 +15,7 @@ const NavbarComponent = () => {
                         <div className="d-flex">
                             <div className="navbarBtn">
                                 <Link href={'/auth'}><button className="btn btn-light mx-3">Masuk</button></Link>
-                                <Link href={'/auth/pelamar'}><button className="btn btn-primary">Daftar</button></Link>
+                                <Link href={'/auth/signup'}><button className="btn btn-primary">Daftar</button></Link>
                             </div>
                             {/* <div className="iconNavbar d-flex align-items-center justify-content-center mx-4">
                                 <IoIosNotificationsOutline className="fs-3 mx-3" />
