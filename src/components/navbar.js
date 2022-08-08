@@ -19,7 +19,8 @@ const NavbarComponent = () => {
                             </div> */}
                             <div className="iconNavbar d-flex align-items-center justify-content-center mx-4">
                                 <IoIosNotificationsOutline className="fs-3 mx-3" />
-                                <BiEnvelope className="fs-3 mr-3" />
+                                <Link href={'/chat'}><a><BiEnvelope className="fs-3 mr-3" /></a>
+                                </Link>
                             </div>
                             <div className="dropdown">
                                 <a className="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
