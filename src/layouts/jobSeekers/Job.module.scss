@@ -1,0 +1,42 @@
+.headNav{
+    background-color: var(--primary);
+    padding:1rem 0;
+}
+
+.searchBar{
+    margin:2rem 0;
+    width: 100%;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+}
+
+.jobList{
+    background-color: #fff;
+    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+    padding:2rem 1rem;
+}
+
+.img-circle{
+    border-radius: 50%;
+}
+
+.detailList{
+    margin-right: 10px;
+}
+
+.nameList{
+    font-size: 22px;
+    font-weight: 600;
+    color: #1F2A36;
+}
+
+.jobdeskList{
+    font-size: 14px;
+    color: #9EA0A5;
+}
+
+.iconMap{
+    color: #9EA0A5;
+    margin-right: 5px;
+}
+
+
