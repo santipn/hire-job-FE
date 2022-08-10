@@ -7,10 +7,9 @@ import { BsTrash } from 'react-icons/bs'
 import { useEffect, useState } from 'react'
 import useVerify from '../../lib/useVerify'
 import { useSelector, useDispatch } from 'react-redux'
-import { GetBySlug, GetPortfolio, GetSkills, UpdateUser } from '../../redux/actions/users'
+import { GetBySlug, GetUserExperience, GetPortfolio, GetSkills, UpdateUser, AddSkill, RemoveSkill } from '../../redux/actions/users'
 import axios from 'axios'
 import useSWR from 'swr'
-
 const urlImage = process.env.NEXT_PUBLIC_URL_IMAGE
 const fetcher = url => axios.get(url).then(res => res.data).catch(err => err.response.data);
 
@@ -18,19 +17,22 @@ const fetcher = url => axios.get(url).then(res => res.data).catch(err => err.res
 const ProfileLayout = () => {
     const dispatch = useDispatch()
     const { data, mutateData } = useVerify({})
-    let { GetUser, ResponseData, GetSkill, GetPortofolio } = useSelector(state => state.users)
+    let { GetUser, ResponseData, GetSkill, GetPortofolio, GetExperience } = useSelector(state => state.users)
     const { data: token } = useSWR(`/api/auth/token`, fetcher)
     console.log(GetSkill, 'skill');
     console.log(GetPortofolio, 'portofolio');
+    console.log(GetExperience, 'exp');
     useEffect(() => {
         dispatch(GetBySlug(data.userSlug))
-        dispatch(GetSkills(token.token))
-        dispatch(GetPortfolio(token.token, data.userSlug))
+        dispatch(GetSkills(token?.token))
+        dispatch(GetUserExperience(token?.token))
+        dispatch(GetPortfolio(token?.token, data.userSlug))
         mutateData()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, ResponseData])
     // const user = GetUser?.results[0]?
     // console.log(GetUser)
+    const [skill, setSkill] = useState({})
     const [formProfile, setFormProfile] = useState({
         userFullName: GetUser?.results[0]?.userFullName,
         address: GetUser?.results[0]?.address,
@@ -58,6 +60,15 @@ const ProfileLayout = () => {
         bodyFormData.append('github', formProfile.github)
         bodyFormData.append('gitlab', formProfile.gitlab)
         dispatch(UpdateUser(token.token, bodyFormData))
+    }
+
+    const handleSkill = (e) => {
+        e.preventDefault()
+        dispatch(AddSkill(token.token, skill))
+    }
+
+    const deleteSkill = async (id) => {
+        dispatch(RemoveSkill(token.token, id));
     }
 
     return (<>
@@ -150,12 +161,12 @@ const ProfileLayout = () => {
                             <h3 className={styles.nameDetail}>Skill</h3>
                         </div>
                         <div className="card-body">
-                            <form>
+                            <form onSubmit={(e) => handleSkill(e)}>
                                 <div className="row d-flex align-items-center">
                                     <div className="col-lg-9 col-md-12">
                                         <div className="form-group">
                                             <label>Skill</label>
-                                            <input type="text" className="form-control" placeholder="Masukan skill" />
+                                            <input type="text" className="form-control" placeholder="Masukan skill" onChange={(e) => setSkill(prevData => ({ ...prevData, skillName: e.target.value }))} required />
                                         </div>
                                     </div>
                                     <div className="col-lg-3 col-md-12">
@@ -165,10 +176,12 @@ const ProfileLayout = () => {
                                     </div>
                                 </div>
                             </form>
-                            <div className="row my-3 rowSkill">
-                                <div className="col">
-                                    <button className="btn btnSkill">PHP <FiEdit2 />{' '}<BsTrash /></button>
-                                </div>
+                            <div className="row my-3 rowSkill w-80">
+                                {!GetSkill.length ? 'no data' : GetSkill?.map((item, index) => (
+                                    <div className="col-3" key={index}>
+                                        <button className="btn btnSkill">{item.skillName} <a type='button' onClick={() => deleteSkill(item.skill_id)}><BsTrash /></a></button>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>
@@ -178,36 +191,36 @@ const ProfileLayout = () => {
                             <h3 className={styles.nameDetail}>Pengalaman Kerja</h3>
                         </div>
                         <div className="card-body">
-                            <form>
+                            <form encType='multipart/form-data'>
                                 <div className="row">
                                     <div className="col-6">
                                         <div className="form-group">
                                             <label>Nama perusahaan</label>
-                                            <input type="text" className="form-control" placeholder="Masukan nama perusahaan" />
+                                            <input type="text" className="form-control" placeholder="Masukan nama perusahaan" required />
                                         </div>
                                     </div>
                                     <div className="col-6">
                                         <div className="form-group">
                                             <label>Posisi</label>
-                                            <input type="text" className="form-control" placeholder="web developer" />
+                                            <input type="text" className="form-control" placeholder="web developer" required />
                                         </div>
                                     </div>
                                     <div className="col-6">
                                         <div className="form-group">
                                             <label>Tanggal masuk</label>
-                                            <input type="date" className="form-control" />
+                                            <input type="date" className="form-control" required />
                                         </div>
                                     </div>
                                     <div className="col-6">
                                         <div className="form-group">
                                             <label>Tanggal keluar</label>
-                                            <input type="date" className="form-control" />
+                                            <input type="date" className="form-control" required />
                                         </div>
                                     </div>
                                 </div>
                                 <div className="form-group">
                                     <label>Deskripsi singkat</label>
-                                    <textarea className="form-control" rows="3" placeholder="Masukan deskripsi singkat pekerjaan"></textarea>
+                                    <textarea className="form-control" rows="3" placeholder="Masukan deskripsi singkat pekerjaan" required></textarea>
                                 </div>
                                 <div className="form-group text-end my-3">
                                     <button className="btn btn-secondary w-100 btn-secondary-mobile">Simpan</button>
@@ -222,10 +235,13 @@ const ProfileLayout = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>PT. Indomarco</td>
-                                        <td><a type='button'><FiEdit2 /></a>{' '}<a type='button'><BsTrash /></a></td>
-                                    </tr>
+                                    {!GetExperience.length ? 'no data' : GetExperience?.map((item, index) => (
+                                        <tr key={index}>
+                                            <td>{item.experienceName}</td>
+                                            <td><a type='button'><FiEdit2 /></a>{' '}<a type='button'><BsTrash /></a></td>
+                                        </tr>
+                                    ))}
+
                                 </tbody>
                             </table>
                         </div>
@@ -236,14 +252,14 @@ const ProfileLayout = () => {
                             <h3 className={styles.nameDetail}>Portofolio</h3>
                         </div>
                         <div className="card-body">
-                            <form>
+                            <form encType='multipart/form-data' onSubmit={(e) => handlePortfolio(e)}>
                                 <div className="form-group">
                                     <label>Nama Aplikasi</label>
-                                    <input type="text" className="form-control" placeholder="Nama Aplikasi" />
+                                    <input type="text" className="form-control" placeholder="Nama Aplikasi" required />
                                 </div>
                                 <div className="form-group">
                                     <label>Link Repository</label>
-                                    <input type="text" className="form-control" placeholder="Link Repository" />
+                                    <input type="text" className="form-control" placeholder="Link Repository" required />
                                 </div>
                                 <div className="form-group">
                                     <label>Upload Gambar</label>
@@ -262,10 +278,12 @@ const ProfileLayout = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>Go Trash</td>
-                                        <td><a type='button'><FiEdit2 /></a>{' '}<a type='button'><BsTrash /></a></td>
-                                    </tr>
+                                    {!GetPortofolio.length ? 'no data' : GetPortofolio?.map((item, index) => (
+                                        <tr key={index}>
+                                            <td>{item.portfolioName}</td>
+                                            <td><a type='button'><FiEdit2 /></a>{' '}<a type='button'><BsTrash /></a></td>
+                                        </tr>
+                                    ))}
                                 </tbody>
                             </table>
                         </div>

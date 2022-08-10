@@ -8,6 +8,7 @@ const initialState = {
     },
     GetSkill: [],
     GetPortofolio: [],
+    GetExperience: [],
     ResponseData: [],
 }
 
@@ -28,6 +29,8 @@ const Fetch = (state = initialState, action) => {
             return { ...state, loading: false, GetSkill: action.payload }
         case "GET_PORTFOLIO":
             return { ...state, loading: false, GetPortofolio: action.payload }
+        case "GET_EXPERIENCE":
+            return { ...state, loading: false, GetExperience: action.payload }
         default:
             return state
     }
