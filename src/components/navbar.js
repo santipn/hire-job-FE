@@ -38,7 +38,7 @@ const NavbarComponent = () => {
             })
     }
     return (<>
-        <div className="bg-white">
+        <div className="bg-white box-shadowNavbar">
             <div className="container">
                 <nav className="navbar">
                     <div className="container">

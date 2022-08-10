@@ -1,5 +1,5 @@
 import HeadLayout from "../layouts/head"
-import IndexLayout from "../layouts/home"
+import IndexLayout from "../layouts/landingpage"
 
 
 export async function getServerSideProps(context) {

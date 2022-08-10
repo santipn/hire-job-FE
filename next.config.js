@@ -3,8 +3,9 @@ const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   images: {
-    domains: ['localhost'],
+    domains: ['localhost', 'test.dhanz.me'],
   },
+  outputFileTracing: false,
 }
 
 module.exports = nextConfig
