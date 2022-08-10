@@ -23,7 +23,7 @@ const JobSeekersLayout = () => {
         page: router.query.page || 1,
         isActive: 'y',
         search: router.query.search || '',
-        limit: 1,
+        limit: 5,
         sort: router.query.sort || '',
     });
 
@@ -117,11 +117,11 @@ const JobSeekersLayout = () => {
                                         <p className={`m-0 ${styles.jobdeskList}`}>{item.jobdesk} - {item.categories}</p>
                                         <p className={`m-0 py-1 ${styles.jobdeskList}`}><FiMapPin className={styles.iconMap} />{item.address}</p>
                                         <div className="row">
-                                            {item.skills === null ? '' : item.skills.map((skill, index) => (<>
+                                            {item.skills === null ? '' : item.skills.map((skill, index) => (
                                                 <div className="col" key={index}>
                                                     <button className={`btn btnSkill`}>{skill}</button>
                                                 </div>
-                                            </>))}
+                                            ))}
                                         </div>
                                     </div>
                                 </div>
@@ -142,14 +142,14 @@ const JobSeekersLayout = () => {
                         {totalPage.map((item, index) => {
                             let number = index + 1;
                             let page = parseInt(params.page);
-                            return (<>
+                            return (
                                 <li className={
                                     page === number
                                         ? "page-item active"
                                         : "page-item"
                                 }
                                     key={index}><a type="button" className="page-link" onClick={() => handlePaginate(number)}>{number}</a></li>
-                            </>
+
                             );
                         })}
                         <li className="page-item">
