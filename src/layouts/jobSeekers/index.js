@@ -6,32 +6,78 @@ import Image from "next/image"
 import { FiMapPin } from 'react-icons/fi'
 import { GrFormPrevious, GrFormNext } from 'react-icons/gr'
 import Link from "next/link"
-import useSWR from "swr"
+import { useRouter } from "next/router"
 import axios from "axios"
 import { useSelector, useDispatch } from "react-redux"
 import { useEffect, useState } from "react"
 import { GetAllUsers } from "../../redux/actions/users"
 
 
-const fetcher = url => axios.get(url).then(res => res.data).catch(err => err.response.data);
+
 
 const JobSeekersLayout = () => {
+    const router = useRouter()
     const dispatch = useDispatch()
     const { GetUsers, loading } = useSelector(state => state.users)
-    console.log(GetUsers, loading)
     const [params, setParams] = useState({
-        page: 1,
+        page: router.query.page || 1,
         isActive: 'y',
-        search: '',
-        limit: 5,
-        sort: '',
+        search: router.query.search || '',
+        limit: 1,
+        sort: router.query.sort || '',
     });
+
 
     useEffect(() => {
         dispatch(GetAllUsers(params))
     }, [dispatch, params])
-    // const { data, isValidating: loading } = useSWR(`/api/users`, fetcher)
-    // console.log(data, 'data');
+
+    let totalPage = Array(GetUsers.totalPage).fill() ?? [];
+    // let totalPage = GetUsers.totalPage
+    // console.log(totalPage)
+
+
+    const searchHandler = async (e) => {
+        e.preventDefault()
+        const search = e.target.value
+        setParams((prevState) => ({
+            ...prevState,
+            search: search,
+        }))
+        router.query.search = search
+        router.push({
+            pathname: '/home',
+            query: {
+                search: search,
+            },
+        })
+    }
+
+    const sortHandler = async (value) => {
+        setParams((prevState) => ({
+            ...prevState,
+            sort: value,
+        }))
+        console.log(params);
+        router.query.sort = value
+        router.push({
+            pathname: '/home',
+            query: {
+                sort: value,
+            },
+        })
+    }
+
+    const handlePaginate = async (page) => {
+        setParams((prevState) => ({ ...prevState, page }));
+        router.query.page = page
+        router.push({
+            pathname: '/home',
+            query: {
+                page: page,
+            },
+        })
+    }
     return (<>
         <NavbarComponent />
         <div className={styles.headNav}>
@@ -43,14 +89,16 @@ const JobSeekersLayout = () => {
             <div className={styles.searchBar}>
                 <form>
                     <div className="input-group">
-                        <input type="search" placeholder="Search for any skill" className="form-control" />
+                        <input type="search" placeholder="Search for any skill" className="form-control" onChange={(e) => searchHandler(e)} />
                         <div className="input-group-append ">
                             <span className="input-group-text h-100"><BiSearch /></span>
                         </div>
                         <div className="bg-white d-flex align-items-center">
                             <button className="btn dropdown-toggle hover-border-none" type="button" data-bs-toggle="dropdown" aria-expanded="false">Sort</button>
                             <ul className="dropdown-menu">
-                                <li><a className="dropdown-item" href="#">Sort berdasarkan skill</a></li>
+                                <li><a className="dropdown-item" onClick={() => sortHandler('skills')}>Berdasarkan Skill</a></li>
+                                <li><a className="dropdown-item" onClick={() => sortHandler('fulltime')}>Berdasarkan Fulltime</a></li>
+                                <li><a className="dropdown-item" onClick={() => sortHandler('part time')}>Berdasarkan Part-Time</a></li>
                             </ul>
                         </div>
                         <div className="bg-white d-flex align-items-center">
@@ -60,7 +108,12 @@ const JobSeekersLayout = () => {
                 </form>
             </div>
             <div className={styles.jobList}>
-                {loading ? (<>test</>) : GetUsers.results.map((item, index) => (<>
+                {loading ? (<>loading</>) : !GetUsers.results.length ? (<>
+                    <div className="text-center">
+                        <Image src={'/img/notfound.png'} className={styles.imgNotfound} width={300} height={280} alt="notfound" />
+
+                    </div>
+                </>) : GetUsers.results.map((item, index) => (
                     <div className="hoverJobList" key={index}>
                         <div className="row">
                             <div className="col-lg-8 col-md-12 mb-3">
@@ -89,15 +142,25 @@ const JobSeekersLayout = () => {
                         <hr />
                     </div>
 
-                </>))}
+                ))}
                 <nav aria-label="Page navigation">
                     <ul className="pagination justify-content-center">
                         <li className="page-item disabled">
                             <a className="page-link"><GrFormPrevious /></a>
                         </li>
-                        <li className="page-item active"><a className="page-link">1</a></li>
-                        <li className="page-item"><a className="page-link">2</a></li>
-                        <li className="page-item"><a className="page-link">3</a></li>
+                        {totalPage.map((item, index) => {
+                            let number = index + 1;
+                            let page = parseInt(params.page);
+                            return (<>
+                                <li className={
+                                    page === number
+                                        ? "page-item active"
+                                        : "page-item"
+                                }
+                                    key={index}><a type="button" className="page-link" onClick={() => handlePaginate(number)}>{number}</a></li>
+                            </>
+                            );
+                        })}
                         <li className="page-item">
                             <a className="page-link" href="#"><GrFormNext /></a>
                         </li>

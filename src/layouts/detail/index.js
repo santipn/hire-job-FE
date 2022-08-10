@@ -9,6 +9,7 @@ import axios from 'axios'
 import useSWR from 'swr'
 import useVerify from '../../lib/useVerify'
 import moment from 'moment'
+import Link from 'next/link'
 
 const fetcher = url => axios.get(url).then(res => res.data).catch(err => err.response.data);
 
@@ -38,7 +39,7 @@ const DetailLayout = ({ slug }) => {
                                     <p className={styles.pDetail}><FiPhone className={styles.iconMap} />{data.data.results[0].userPhone}</p>
                                     <p className={` ${styles.pDetail} text-justify`}>{data.data.results[0].userDescription === null ? 'Deskripsi belum diatur' : data.data.results[0].userDescription}</p>
                                     {user?.role === 'perekrut' ? (<>
-                                        <button className="btn btn-primary w-100 my-3">Hire</button>
+                                        <Link href={`/hire/${data.data.results[0].userSlug}`}><button className="btn btn-primary w-100 my-3">Hire</button></Link>
                                     </>) : ''}
                                     <h3 className={`my-3 ${styles.nameDetail}`}>Skill</h3>
                                     <div className="row mb-5 skillRow">
@@ -74,12 +75,12 @@ const DetailLayout = ({ slug }) => {
                                 <div className="my-3">
                                     <div className="row">
                                         {loadingPortfoio ? (<> Loading </>) : portfolio.data.map((item, index) => (
-                                            <>
-                                                <div className="col-lg-4 col-6 text-center" key={index}>
-                                                    <Image src={item.portfolioImage !== null ? `${process.env.NEXT_PUBLIC_URL_IMAGE}/${item.portfolioImage}` : '/img/portfolio.png'} width={'200'} height="130" alt="portofolio img" className="img-rounded" />
-                                                    <p className={styles.pDetailPorto}>{item.portfolioName}</p>
-                                                </div>
-                                            </>
+
+                                            <div className="col-lg-4 col-6 text-center" key={index}>
+                                                <Image src={item.portfolioImage !== null ? `${process.env.NEXT_PUBLIC_URL_IMAGE}/${item.portfolioImage}` : '/img/portfolio.png'} width={'200'} height="130" alt="portofolio img" className="img-rounded" />
+                                                <p className={styles.pDetailPorto}>{item.portfolioName}</p>
+                                            </div>
+
                                         ))}
                                     </div>
                                 </div>
@@ -91,7 +92,7 @@ const DetailLayout = ({ slug }) => {
                                             let end = moment(item.experienceOut, "YYYY-MM-DD");
                                             return (
                                                 <>
-                                                    <div className="col-lg-2 d-lg-block d-none">
+                                                    <div key={index} className="col-lg-2 d-lg-block d-none">
                                                         <Image src="/img/iconBag.svg" width={'120'} height="80" alt="portofolio img" className="img-rounded " />
                                                     </div>
                                                     <div className="col-lg-9 col-md-12">
