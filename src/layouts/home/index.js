@@ -1,167 +1,166 @@
-import Image from "next/image"
-import NavbarComponent from "../../components/navbar"
-import bghome1 from '../../../public/img/bghomepage.png'
-import bghome2 from '../../../public/img/bghomepage2.png'
-import bghome3 from '../../../public/img/bghomepage3.png'
-import styles from './Home.module.scss'
-import { MdOutlineDone } from 'react-icons/md'
-import Slider from "react-slick";
 import FooterLayout from "../../components/footer"
+import styles from './Job.module.scss'
+import NavbarComponent from "../../components/navbar"
+import { BiSearch } from 'react-icons/bi'
+import Image from "next/image"
+import { FiMapPin } from 'react-icons/fi'
+import { GrFormPrevious, GrFormNext } from 'react-icons/gr'
+import Link from "next/link"
+import { useRouter } from "next/router"
+import axios from "axios"
+import { useSelector, useDispatch } from "react-redux"
+import { useEffect, useState } from "react"
+import { GetAllUsers } from "../../redux/actions/users"
 
 
-const IndexLayout = () => {
-    const settings = {
-        dots: false,
-        arrows: true,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 3,
-        slidesToScroll: 1,
-        swipeToSlide: true,
-    };
 
+
+const JobSeekersLayout = () => {
+    const router = useRouter()
+    const dispatch = useDispatch()
+    const { GetUsers, loading } = useSelector(state => state.users)
+    const [params, setParams] = useState({
+        page: router.query.page || 1,
+        isActive: 'y',
+        search: router.query.search || '',
+        limit: 5,
+        sort: router.query.sort || '',
+    });
+
+
+    useEffect(() => {
+        dispatch(GetAllUsers(params))
+    }, [dispatch, params])
+
+    let totalPage = Array(GetUsers.totalPage).fill() ?? [];
+    // let totalPage = GetUsers.totalPage
+    // console.log(totalPage)
+
+
+    const searchHandler = async (e) => {
+        e.preventDefault()
+        const search = e.target.value
+        setParams((prevState) => ({
+            ...prevState,
+            search: search,
+        }))
+        router.query.search = search
+        router.push(router)
+        // router.push({
+        //     pathname: '/home',
+        //     query: {
+        //         search: search,
+        //     },
+        // })
+    }
+
+    const sortHandler = async (value) => {
+        setParams((prevState) => ({
+            ...prevState,
+            sort: value,
+        }))
+        console.log(params);
+        router.query.sort = value
+        router.push(router)
+    }
+
+    const handlePaginate = async (page) => {
+        setParams((prevState) => ({ ...prevState, page }));
+        router.query.page = page
+        router.push(router)
+    }
     return (<>
         <NavbarComponent />
-        <div className="bg-white">
-            <div className="container py-5">
-                <div className="row">
-                    <div className="col-lg-6 col-12 d-flex align-items-center ">
-                        <div className={styles.headerDesc}>
-                            <h3 className={styles.titleDesc}>Talenta terbaik negeri untuk perubahan revolusi 4.0</h3>
-                            <p className={styles.pDesc}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In euismod ipsum et dui rhoncus auctor.</p>
-                            <button className={`btn btn-primary`}>Mulai Dari Sekarang</button>
+        <div className={styles.headNav}>
+            <div className="container">
+                <h3 className="text-white fw-bold">Top Jobs</h3>
+            </div>
+        </div>
+        <div className="container">
+            <div className={styles.searchBar}>
+                <form>
+                    <div className="input-group">
+                        <input type="search" placeholder="Search for any skill" className="form-control" onChange={(e) => searchHandler(e)} />
+                        <div className="input-group-append ">
+                            <span className="input-group-text h-100"><BiSearch /></span>
+                        </div>
+                        <div className="bg-white d-flex align-items-center">
+                            <button className="btn dropdown-toggle hover-border-none" type="button" data-bs-toggle="dropdown" aria-expanded="false">Sort</button>
+                            <ul className="dropdown-menu">
+                                <li><a className="dropdown-item" onClick={() => sortHandler('skills')}>Berdasarkan Skill</a></li>
+                                <li><a className="dropdown-item" onClick={() => sortHandler('fulltime')}>Berdasarkan Fulltime</a></li>
+                                <li><a className="dropdown-item" onClick={() => sortHandler('part time')}>Berdasarkan Part-Time</a></li>
+                            </ul>
+                        </div>
+                        <div className="bg-white d-flex align-items-center">
+                            <button className="btn btn-primary">Search</button>
                         </div>
                     </div>
-                    <div className="col-lg-6 col-12">
-                        <Image src={bghome1} alt="bg homepage"></Image>
+                </form>
+            </div>
+            <div className={styles.jobList}>
+                {loading ? (<>loading</>) : !GetUsers.results.length ? (<>
+                    <div className="text-center">
+                        <Image src={'/img/notfound.png'} className={styles.imgNotfound} width={300} height={280} alt="notfound" />
+
                     </div>
-                </div>
-                <div className="row my-3">
-                    <div className="col-lg-6 col-12">
-                        <Image src={bghome2} alt="bg homepage"></Image>
-                    </div>
-                    <div className="col-lg-6 col-12 pt-5">
-                        <div className={`${styles.headerDesc}`}>
-                            <h3 className={`${styles.titleDesc} mb-4`}>Kenapa harus mencari tallent di peworld</h3>
-                            <div className="d-flex align-items-center mb-3">
-                                <MdOutlineDone className={styles.iconDesc} />
-                                <p className={`m-0 ${styles.pDesc}`}>Lorem ipsum dolor sit amet.</p>
+                </>) : GetUsers.results.map((item, index) => (
+                    <div className="hoverJobList" key={index}>
+                        <div className="row">
+                            <div className="col-lg-8 col-md-12 mb-3">
+                                <div className="d-lg-flex align-items-center">
+                                    <div className={styles.detailList}>
+                                        <Image src={item.userImage !== null ? `${process.env.NEXT_PUBLIC_URL_IMAGE}/${item.userImage}` : '/img/person.png'} className="img-circle" width={'100'} height="100" alt="img profile"></Image>
+                                    </div>
+                                    <div className={styles.detailName}>
+                                        <h3 className={styles.nameList}>{item.userFullName}</h3>
+                                        <p className={`m-0 ${styles.jobdeskList}`}>{item.jobdesk} - {item.categories}</p>
+                                        <p className={`m-0 py-1 ${styles.jobdeskList}`}><FiMapPin className={styles.iconMap} />{item.address}</p>
+                                        <div className="row">
+                                            {item.skills === null ? '' : item.skills.map((skill, index) => (
+                                                <div className="col" key={index}>
+                                                    <button className={`btn btnSkill`}>{skill}</button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div className="d-flex align-items-center mb-3">
-                                <MdOutlineDone className={styles.iconDesc} />
-                                <p className={`m-0 ${styles.pDesc}`}>Lorem ipsum dolor sit amet.</p>
-                            </div>
-                            <div className="d-flex align-items-center mb-3">
-                                <MdOutlineDone className={styles.iconDesc} />
-                                <p className={`m-0 ${styles.pDesc}`}>Lorem ipsum dolor sit amet.</p>
-                            </div>
-                            <div className="d-flex align-items-center mb-3">
-                                <MdOutlineDone className={styles.iconDesc} />
-                                <p className={`m-0 ${styles.pDesc}`}>Lorem ipsum dolor sit amet.</p>
+                            <div className="col-lg-4 col-md-12 d-flex text-center justify-content-start align-items-center">
+                                <Link href={`detail/${item.userSlug}`}><button className="btn btn-primary">Lihat Profile</button></Link>
                             </div>
                         </div>
+                        <hr />
                     </div>
-                </div>
-                <div className="row my-3">
-                    <div className="col-lg-6 col-12 pt-5">
-                        <div className={`${styles.headerDesc}`}>
-                            <h3 className={`${styles.titleDesc} mb-4`}>Skill Talent</h3>
-                            <p className={`${styles.pDesc}`}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In euismod ipsum et dui rhoncus auctor.</p>
-                            <div className="row">
-                                <div className="col-6">
-                                    <div className="d-flex align-items-center mb-3">
-                                        <MdOutlineDone className={styles.iconSkillDesc} />
-                                        <p className={`m-0 ${styles.pDesc}`}>Java</p>
-                                    </div>
-                                    <div className="d-flex align-items-center mb-3">
-                                        <MdOutlineDone className={styles.iconSkillDesc} />
-                                        <p className={`m-0 ${styles.pDesc}`}>Kotlin</p>
-                                    </div>
-                                    <div className="d-flex align-items-center mb-3">
-                                        <MdOutlineDone className={styles.iconSkillDesc} />
-                                        <p className={`m-0 ${styles.pDesc}`}>PHP</p>
-                                    </div>
-                                    <div className="d-flex align-items-center mb-3">
-                                        <MdOutlineDone className={styles.iconSkillDesc} />
-                                        <p className={`m-0 ${styles.pDesc}`}>Javascript</p>
-                                    </div>
-                                </div>
-                                <div className="col-6">
-                                    <div className="d-flex align-items-center mb-3">
-                                        <MdOutlineDone className={styles.iconSkillDesc} />
-                                        <p className={`m-0 ${styles.pDesc}`}>Golang</p>
-                                    </div>
-                                    <div className="d-flex align-items-center mb-3">
-                                        <MdOutlineDone className={styles.iconSkillDesc} />
-                                        <p className={`m-0 ${styles.pDesc}`}>C++</p>
-                                    </div>
-                                    <div className="d-flex align-items-center mb-3">
-                                        <MdOutlineDone className={styles.iconSkillDesc} />
-                                        <p className={`m-0 ${styles.pDesc}`}>Ruby</p>
-                                    </div>
-                                    <div className="d-flex align-items-center mb-3">
-                                        <MdOutlineDone className={styles.iconSkillDesc} />
-                                        <p className={`m-0 ${styles.pDesc}`}>10+ Bahasa Lainya</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-lg-6 col-12">
-                        <Image src={bghome3} alt="bg homepage"></Image>
-                    </div>
-                </div>
-                <div className="row mt-3">
-                    <h3 className={`text-center my-5 ${styles.titleDesc}`}>Their opinion about peworld</h3>
-                    <div className="col-12 text-center">
-                        <Slider {...settings}>
-                            <div className="card">
-                                <div className="card-body">
-                                    <Image src="/img/person.png" alt="profile picture" width={'80'} height={'80'} className={`${styles.opinionImg}`}></Image>
-                                    <h4 className="opinionTitle">Hary Style</h4>
-                                    <p className="opinionJob">Web Developer</p>
-                                    <p className="opinionDesc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In euismod ipsum et dui rhoncus auctor.</p>
-                                </div>
-                            </div>
-                            <div className="card">
-                                <div className="card-body">
-                                    <Image src="/img/person.png" alt="profile picture" width={'80'} height={'80'} className={`${styles.opinionImg}`}></Image>
-                                    <h4 className="opinionTitle">Hary Style</h4>
-                                    <p className="opinionJob">Web Developer</p>
-                                    <p className="opinionDesc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In euismod ipsum et dui rhoncus auctor.</p>
-                                </div>
-                            </div>
-                            <div className="card">
-                                <div className="card-body">
-                                    <Image src="/img/person.png" alt="profile picture" width={'80'} height={'80'} className={`${styles.opinionImg}`}></Image>
-                                    <h4 className="opinionTitle">Hary Style</h4>
-                                    <p className="opinionJob">Web Developer</p>
-                                    <p className="opinionDesc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In euismod ipsum et dui rhoncus auctor.</p>
-                                </div>
-                            </div>
-                            <div className="card">
-                                <div className="card-body">
-                                    <Image src="/img/person.png" alt="profile picture" width={'80'} height={'80'} className={`${styles.opinionImg}`}></Image>
-                                    <h4 className="opinionTitle">Hary Style</h4>
-                                    <p className="opinionJob">Web Developer</p>
-                                    <p className="opinionDesc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. In euismod ipsum et dui rhoncus auctor.</p>
-                                </div>
-                            </div>
-                        </Slider>
-                    </div>
-                </div>
-                <div className="row mt-5">
-                    <div className={styles.footerCard}>
-                        <div className={`d-flex justify-content-between align-items-center ${styles.footerCardWrapper}`}>
-                            <h3 className={styles.footerCardTitle}>Lorem ipsum dolor sit amet</h3>
-                            <button className="btn-secondary">Mulai dari sekarang</button>
-                        </div>
-                    </div>
-                </div>
+
+                ))}
+                <nav aria-label="Page navigation">
+                    <ul className="pagination justify-content-center">
+                        <li className="page-item disabled">
+                            <a className="page-link"><GrFormPrevious /></a>
+                        </li>
+                        {totalPage.map((item, index) => {
+                            let number = index + 1;
+                            let page = parseInt(params.page);
+                            return (
+                                <li className={
+                                    page === number
+                                        ? "page-item active"
+                                        : "page-item"
+                                }
+                                    key={index}><a type="button" className="page-link" onClick={() => handlePaginate(number)}>{number}</a></li>
+
+                            );
+                        })}
+                        <li className="page-item">
+                            <a className="page-link" href="#"><GrFormNext /></a>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
         <FooterLayout />
     </>)
 }
 
-export default IndexLayout
+export default JobSeekersLayout
