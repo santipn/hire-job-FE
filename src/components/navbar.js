@@ -7,13 +7,21 @@ import useVerify from "../lib/useVerify"
 import axios from "axios"
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import useSWR from "swr"
+import { useEffect } from "react"
 
 const urlWeb = process.env.NEXT_PUBLIC_URL_IMAGE
+const fetcher = url => axios.get(url).then(res => res.data).catch(err => err.response.data);
+
 
 const NavbarComponent = () => {
     // const router = useRouter()
     const { data, mutateData } = useVerify();
-    // console.log(data)
+    const { data: token } = useSWR("/api/auth/token", fetcher)
+    const { data: notif } = useSWR(`/api/notification?token=${token?.token}`, fetcher, { refreshInterval: 5000 })
+    console.log(notif)
+
+
 
     const handleLogout = () => {
         axios({
@@ -48,7 +56,13 @@ const NavbarComponent = () => {
                         <div className="d-flex">
                             {data?.isLoggedIn ? (<>
                                 <div className="iconNavbar d-flex align-items-center justify-content-center mx-4">
-                                    <IoIosNotificationsOutline className="fs-3 mx-3" />
+                                    <IoIosNotificationsOutline onClick={() => handleClick} className="fs-3 mx-3" />
+                                    {notif?.unread < 1 || notif?.unread == undefined ? '' : (<>
+                                        <span className="position-absolute top-0 translate-middle badge rounded-pill bg-danger notip">
+                                            {notif?.unread}
+                                            <span className="visually-hidden">unread messages</span>
+                                        </span>
+                                    </>)}
                                     <Link href={'/chat'}><a><BiEnvelope className="fs-3 mr-3" /></a>
                                     </Link>
                                 </div>

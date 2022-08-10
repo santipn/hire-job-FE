@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Swal from 'sweetalert2'
 
 const urlAPI = process.env.NEXT_PUBLIC_URL_API;
 
@@ -35,6 +36,14 @@ const getSkills = (data) => {
 const getPortfolio = (data) => {
     return {
         type: "GET_PORTFOLIO",
+        payload: data
+    };
+}
+
+
+const getExperience = (data) => {
+    return {
+        type: "GET_EXPERIENCE",
         payload: data
     };
 }
@@ -87,7 +96,7 @@ export const GetSkills = (token) => {
         dispatch(GetUsersRequest())
         axios({
             method: "GET",
-            url: `${urlAPI}/skills`,
+            url: `${urlAPI}/skills/`,
             headers: {
                 Authorization: `Bearer ${token}`
             }
@@ -112,6 +121,180 @@ export const GetPortfolio = (token, slug) => {
             dispatch(getPortfolio(res.data.data));
         }).catch((err) => {
             dispatch(GetUsersError(err.response.data));
+        })
+    }
+}
+
+export const GetUserExperience = (token) => {
+    return (dispatch) => {
+        dispatch(GetUsersRequest())
+        axios({
+            method: "GET",
+            url: `${urlAPI}/experiences/`,
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).then((res) => {
+            dispatch(getExperience(res.data.data));
+        }).catch((err) => {
+            dispatch(GetUsersError(err.response.data));
+        })
+    }
+}
+
+export const AddSkill = (token, data) => {
+    return (dispatch) => {
+        dispatch(GetUsersRequest())
+        axios({
+            method: "POST",
+            url: `${urlAPI}/skills/`,
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            data
+        }).then((res) => {
+            dispatch(getResponse(res.data));
+            toast.success(`${res.data.message}`, {
+                position: "top-left",
+                autoClose: 2000,
+                hideProgressBar: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+        }).catch((err) => {
+            dispatch(GetUsersError(err.response.data));
+            toast.error(`${err.response.data.message}`, {
+                position: "top-left",
+                autoClose: 2000,
+                hideProgressBar: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+        })
+    }
+}
+
+export const RemoveSkill = (token, id) => {
+    return (dispatch) => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios({
+                    method: "DELETE",
+                    url: `${urlAPI}/skills/${id}`,
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }).then((res) => {
+
+                    dispatch(getResponse(res.data));
+                    toast.success(`${res.data.message}`, {
+                        position: "top-left",
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
+                }).catch((err) => {
+                    dispatch(GetUsersError(err.response.data));
+                    toast.error(`${err.response.data.message}`, {
+                        position: "top-left",
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
+                })
+            }
+        }).catch(error => {
+            dispatch(GetUsersError(error.response.data));
+            toast.error(`${err.response.data.message}`, {
+                position: "top-left",
+                autoClose: 2000,
+                hideProgressBar: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+        })
+
+    }
+}
+
+export const AddPortfolio = (token, data) => {
+    return (dispatch) => {
+        dispatch(GetUsersRequest())
+        axios({
+            method: "POST",
+            url: `${urlAPI}/portfolio/`,
+            headers: {
+                Authorization: `Bearer ${token}`
+            },
+            data
+        }).then((res) => {
+            dispatch(getResponse(res.data));
+            toast.success(`${res.data.message}`, {
+                position: "top-left",
+                autoClose: 2000,
+                hideProgressBar: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+        }).catch((err) => {
+            dispatch(GetUsersError(err.response.data));
+            toast.error(`${err.response.data.message}`, {
+                position: "top-left",
+                autoClose: 2000,
+                hideProgressBar: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+        })
+    }
+}
+
+export const RemovePortfolio = (token, id) => {
+    return (dispatch) => {
+        dispatch(GetUsersRequest())
+        axios({
+            method: "DELETE",
+            url: `${urlAPI}/portfolio/${id}`,
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }).then((res) => {
+            dispatch(getResponse(res.data));
+            toast.success(`${res.data.message}`, {
+                position: "top-left",
+                autoClose: 2000,
+                hideProgressBar: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+        }).catch((err) => {
+            dispatch(GetUsersError(err.response.data));
+            toast.error(`${err.response.data.message}`, {
+                position: "top-left",
+                autoClose: 2000,
+                hideProgressBar: false,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
         })
     }
 }
