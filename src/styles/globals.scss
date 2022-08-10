@@ -381,6 +381,10 @@ form{
   }
 }
 
+.box-shadowNavbar{
+  box-shadow: 0px 14px 8px -4px rgba(0,0,0,0.23);
+}
+
 //media query
 @media screen and (max-width: 768px) {
   .card{
