@@ -7,9 +7,16 @@ import styles from './Home.module.scss'
 import { MdOutlineDone } from 'react-icons/md'
 import Slider from "react-slick";
 import FooterLayout from "../../components/footer"
+import axios from "axios"
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useEffect } from "react";
 
 
-const IndexLayout = () => {
+
+const IndexLayout = (data) => {
+
+    const { email, code } = data.data
     const settings = {
         dots: false,
         arrows: true,
@@ -19,6 +26,34 @@ const IndexLayout = () => {
         slidesToScroll: 1,
         swipeToSlide: true,
     };
+
+
+
+    useEffect(() => {
+        if (email && code) {
+            axios.post(`/api/auth/verifycode`, data.data)
+                .then(res => {
+                    toast.success(`${res.data.message}`, {
+                        position: "top-left",
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
+                })
+                .catch(err => {
+                    toast.error(`${err.response.data.message}`, {
+                        position: "top-left",
+                        autoClose: 2000,
+                        hideProgressBar: false,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
+                })
+        }
+    })
 
     return (<>
         <NavbarComponent />

@@ -6,8 +6,32 @@ import Image from "next/image"
 import { FiMapPin } from 'react-icons/fi'
 import { GrFormPrevious, GrFormNext } from 'react-icons/gr'
 import Link from "next/link"
+import useSWR from "swr"
+import axios from "axios"
+import { useSelector, useDispatch } from "react-redux"
+import { useEffect, useState } from "react"
+import { GetAllUsers } from "../../redux/actions/users"
+
+
+const fetcher = url => axios.get(url).then(res => res.data).catch(err => err.response.data);
 
 const JobSeekersLayout = () => {
+    const dispatch = useDispatch()
+    const { GetUsers, loading } = useSelector(state => state.users)
+    console.log(GetUsers, loading)
+    const [params, setParams] = useState({
+        page: 1,
+        isActive: 'y',
+        search: '',
+        limit: 5,
+        sort: '',
+    });
+
+    useEffect(() => {
+        dispatch(GetAllUsers(params))
+    }, [dispatch, params])
+    // const { data, isValidating: loading } = useSWR(`/api/users`, fetcher)
+    // console.log(data, 'data');
     return (<>
         <NavbarComponent />
         <div className={styles.headNav}>
@@ -36,161 +60,36 @@ const JobSeekersLayout = () => {
                 </form>
             </div>
             <div className={styles.jobList}>
-                <div className="hoverJobList">
-                    <div className="row">
-                        <div className="col-lg-8 col-md-12 mb-3">
-                            <div className="d-lg-flex align-items-center">
-                                <div className={styles.detailList}>
-                                    <Image src="/img/person.png" className="img-circle" width={'100'} height="100" alt="img profile"></Image>
-                                </div>
-                                <div className={styles.detailName}>
-                                    <h3 className={styles.nameList}>Louis Tomlinson</h3>
-                                    <p className={`m-0 ${styles.jobdeskList}`}>Web developer - Freelance</p>
-                                    <p className={`m-0 py-1 ${styles.jobdeskList}`}><FiMapPin className={styles.iconMap} />Purwokerto</p>
-                                    <div className="row">
-                                        <div className="col">
-                                            <button className={`btn btnSkill`}>PHP</button>
-                                        </div>
-                                        <div className="col">
-                                            <button className={`btn btnSkill`}>Javascript</button>
-                                        </div>
-                                        <div className="col">
-                                            <button className={`btn btnSkill`}>HTML</button>
+                {loading ? (<>test</>) : GetUsers.results.map((item, index) => (<>
+                    <div className="hoverJobList" key={index}>
+                        <div className="row">
+                            <div className="col-lg-8 col-md-12 mb-3">
+                                <div className="d-lg-flex align-items-center">
+                                    <div className={styles.detailList}>
+                                        <Image src={item.userImage !== null ? `${process.env.NEXT_PUBLIC_URL_IMAGE}/${item.userImage}` : '/img/person.png'} className="img-circle" width={'100'} height="100" alt="img profile"></Image>
+                                    </div>
+                                    <div className={styles.detailName}>
+                                        <h3 className={styles.nameList}>{item.userFullName}</h3>
+                                        <p className={`m-0 ${styles.jobdeskList}`}>{item.jobdesk} - {item.categories}</p>
+                                        <p className={`m-0 py-1 ${styles.jobdeskList}`}><FiMapPin className={styles.iconMap} />{item.address}</p>
+                                        <div className="row">
+                                            {item.skills === null ? '' : item.skills.map((skill, index) => (<>
+                                                <div className="col" key={index}>
+                                                    <button className={`btn btnSkill`}>{skill}</button>
+                                                </div>
+                                            </>))}
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-lg-4 col-md-12 d-flex text-center justify-content-start align-items-center">
-                            <Link href={'detail'}><button className="btn btn-primary">Lihat Profile</button></Link>
-                        </div>
-                    </div>
-                    <hr />
-                </div>
-                <div className="hoverJobList">
-                    <div className="row">
-                        <div className="col-lg-8 col-md-12 mb-3">
-                            <div className="d-lg-flex align-items-center">
-                                <div className={styles.detailList}>
-                                    <Image src="/img/person.png" className="img-circle" width={'100'} height="100" alt="img profile"></Image>
-                                </div>
-                                <div className={styles.detailName}>
-                                    <h3 className={styles.nameList}>Louis Tomlinson</h3>
-                                    <p className={`m-0 ${styles.jobdeskList}`}>Web developer - Freelance</p>
-                                    <p className={`m-0 py-1 ${styles.jobdeskList}`}><FiMapPin className={styles.iconMap} />Purwokerto</p>
-                                    <div className="row">
-                                        <div className="col">
-                                            <button className={`btn btnSkill`}>PHP</button>
-                                        </div>
-                                        <div className="col">
-                                            <button className={`btn btnSkill`}>Javascript</button>
-                                        </div>
-                                        <div className="col">
-                                            <button className={`btn btnSkill`}>HTML</button>
-                                        </div>
-                                    </div>
-                                </div>
+                            <div className="col-lg-4 col-md-12 d-flex text-center justify-content-start align-items-center">
+                                <Link href={`detail/${item.userSlug}`}><button className="btn btn-primary">Lihat Profile</button></Link>
                             </div>
                         </div>
-                        <div className="col-lg-4 col-md-12 d-flex text-center justify-content-start align-items-center">
-                            <Link href={'detail'}><button className="btn btn-primary">Lihat Profile</button></Link>
-                        </div>
+                        <hr />
                     </div>
-                    <hr />
-                </div>
-                <div className="hoverJobList">
-                    <div className="row">
-                        <div className="col-lg-8 col-md-12 mb-3">
-                            <div className="d-lg-flex align-items-center">
-                                <div className={styles.detailList}>
-                                    <Image src="/img/person.png" className="img-circle" width={'100'} height="100" alt="img profile"></Image>
-                                </div>
-                                <div className={styles.detailName}>
-                                    <h3 className={styles.nameList}>Louis Tomlinson</h3>
-                                    <p className={`m-0 ${styles.jobdeskList}`}>Web developer - Freelance</p>
-                                    <p className={`m-0 py-1 ${styles.jobdeskList}`}><FiMapPin className={styles.iconMap} />Purwokerto</p>
-                                    <div className="row">
-                                        <div className="col">
-                                            <button className={`btn btnSkill`}>PHP</button>
-                                        </div>
-                                        <div className="col">
-                                            <button className={`btn btnSkill`}>Javascript</button>
-                                        </div>
-                                        <div className="col">
-                                            <button className={`btn btnSkill`}>HTML</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-lg-4 col-md-12 d-flex text-center justify-content-start align-items-center">
-                            <Link href={'detail'}><button className="btn btn-primary">Lihat Profile</button></Link>
-                        </div>
-                    </div>
-                    <hr />
-                </div>
-                <div className="hoverJobList">
-                    <div className="row">
-                        <div className="col-lg-8 col-md-12 mb-3">
-                            <div className="d-lg-flex align-items-center">
-                                <div className={styles.detailList}>
-                                    <Image src="/img/person.png" className="img-circle" width={'100'} height="100" alt="img profile"></Image>
-                                </div>
-                                <div className={styles.detailName}>
-                                    <h3 className={styles.nameList}>Louis Tomlinson</h3>
-                                    <p className={`m-0 ${styles.jobdeskList}`}>Web developer - Freelance</p>
-                                    <p className={`m-0 py-1 ${styles.jobdeskList}`}><FiMapPin className={styles.iconMap} />Purwokerto</p>
-                                    <div className="row">
-                                        <div className="col">
-                                            <button className={`btn btnSkill`}>PHP</button>
-                                        </div>
-                                        <div className="col">
-                                            <button className={`btn btnSkill`}>Javascript</button>
-                                        </div>
-                                        <div className="col">
-                                            <button className={`btn btnSkill`}>HTML</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-lg-4 col-md-12 d-flex text-center justify-content-start align-items-center">
-                            <Link href={'detail'}><button className="btn btn-primary">Lihat Profile</button></Link>
-                        </div>
-                    </div>
-                    <hr />
-                </div>
-                <div className="hoverJobList">
-                    <div className="row">
-                        <div className="col-lg-8 col-md-12 mb-3">
-                            <div className="d-lg-flex align-items-center">
-                                <div className={styles.detailList}>
-                                    <Image src="/img/person.png" className="img-circle" width={'100'} height="100" alt="img profile"></Image>
-                                </div>
-                                <div className={styles.detailName}>
-                                    <h3 className={styles.nameList}>Louis Tomlinson</h3>
-                                    <p className={`m-0 ${styles.jobdeskList}`}>Web developer - Freelance</p>
-                                    <p className={`m-0 py-1 ${styles.jobdeskList}`}><FiMapPin className={styles.iconMap} />Purwokerto</p>
-                                    <div className="row">
-                                        <div className="col">
-                                            <button className={`btn btnSkill`}>PHP</button>
-                                        </div>
-                                        <div className="col">
-                                            <button className={`btn btnSkill`}>Javascript</button>
-                                        </div>
-                                        <div className="col">
-                                            <button className={`btn btnSkill`}>HTML</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-lg-4 col-md-12 d-flex text-center justify-content-start align-items-center">
-                            <Link href={'detail'}><button className="btn btn-primary">Lihat Profile</button></Link>
-                        </div>
-                    </div>
-                    <hr />
-                </div>
+
+                </>))}
                 <nav aria-label="Page navigation">
                     <ul className="pagination justify-content-center">
                         <li className="page-item disabled">
