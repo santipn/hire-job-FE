@@ -1,16 +1,94 @@
-.card {
-    background: #fff;
-    transition: .5s;
-    border: 0;
-    margin-bottom: 30px;
-    border-radius: .55rem;
-    position: relative;
-    width: 100%;
-    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%);
-}
+// .sec {
+//     background-color: #cdc4f9;
+// }
 
-.chat-app {
-    width: 0%;
+// .chat {
+//     border-radius: 15px;
 
-    
+//     .form-control:focus{
+//         border-color: transparent;
+//         box-shadow: inset 0px 0px 0px 1px transparent;
+//     }
+// }
+
+.chatLayout {
+    background-color: #cdc4f9;
+    padding: 5em 0;
+    .left {
+        .leftPanel {
+            height: 60%;
+            background: #fff;
+            border-radius: 10px;
+            padding: 1em 2em;
+
+            h5 {
+                font-size: 24px;
+                font-weight: 500;
+            }
+            .line {
+                width: 100%;
+                margin: 1em 0;
+                height: 2px;
+                background: lightgray;
+            }
+            .Image {
+                display: flex;
+                align-items: center;
+                img {
+                    width: 60px;
+                    height: 60px;
+                    border-radius: 50%;
+                }
+                .text {
+                    h4 {
+                        margin: 0;
+                        font-size: 18px;
+                        font-weight: 600;
+                    }
+                    p {
+                        margin: 0;
+                        font-size: 14px;
+                    }
+                }
+            }
+
+        }
+
+    }
+    .right {
+        .rightPanel {
+            padding: 1em 2em;
+            background: #fff;
+            border-radius: 10px;
+
+            h3 {
+                font-size: 25px;
+                font-weight: 600;
+            }
+            .vLine {
+                width: 100%;
+                height: 2px;
+                background: lightgray;
+                margin: 1em 0;
+            }
+            .chatContent {
+                height: 100vh;
+            }
+            .messages {
+                input {
+                    width: 100%;
+                    height: 40px;
+                    border-radius: 50px;
+                    outline: none;
+                    border: 2px solid lightgray;
+                    background: #fff;
+                    padding-left: 1.5em;
+                    font-size: 15px;
+                    font-weight: 500;
+                }
+            }
+
+        }
+
+    }
 }
