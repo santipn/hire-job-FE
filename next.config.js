@@ -5,6 +5,7 @@ const nextConfig = {
   images: {
     domains: ['localhost', 'test.dhanz.me'],
   },
+  outputFileTracing: false,
 }
 
 module.exports = nextConfig

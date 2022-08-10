@@ -48,6 +48,7 @@ const JobSeekersLayout = () => {
         router.push({
             pathname: '/home',
             query: {
+                ...query,
                 search: search,
             },
         })
@@ -63,6 +64,7 @@ const JobSeekersLayout = () => {
         router.push({
             pathname: '/home',
             query: {
+                ...query,
                 sort: value,
             },
         })
@@ -74,6 +76,7 @@ const JobSeekersLayout = () => {
         router.push({
             pathname: '/home',
             query: {
+                ...query,
                 page: page,
             },
         })
