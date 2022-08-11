@@ -54,7 +54,8 @@ some technology used in this project.
 <!-- kalau bisa dibuat tabel antara tampilan web dan mobile -->
 |name  | web   | mobile |
 | ------------- | ------------- | -------------|
-
+| Landing page       | ![landing](https://raw.githubusercontent.com/dhanisetiaji/hire-job/main/screenshot/home.png)| -|
+| Login        | ![login](https://raw.githubusercontent.com/dhanisetiaji/hire-job/main/screenshot/login.png)| - |
 
 <!-- GETTING STARTED -->
 ## Getting Started
