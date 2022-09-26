@@ -63,7 +63,7 @@ const IndexLayout = (data) => {
                     <div className="col-lg-6 col-12 d-flex align-items-center ">
                         <div className={styles.headerDesc}>
                             <h3 className={styles.titleDesc}>Talenta terbaik negeri untuk perubahan revolusi 4.0</h3>
-                            <p className={styles.pDesc}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In euismod ipsum et dui rhoncus auctor.</p>
+                            <p className={styles.pDesc}>Rekrut developer terbaik yang berbakat di berbagai bidang.</p>
                             <button className={`btn btn-primary`}>Mulai Dari Sekarang</button>
                         </div>
                     </div>
@@ -77,22 +77,22 @@ const IndexLayout = (data) => {
                     </div>
                     <div className="col-lg-6 col-12 pt-5">
                         <div className={`${styles.headerDesc}`}>
-                            <h3 className={`${styles.titleDesc} mb-4`}>Kenapa harus mencari tallent di peworld</h3>
+                            <h3 className={`${styles.titleDesc} mb-4`}>Kenapa harus mencari talent di peworld</h3>
                             <div className="d-flex align-items-center mb-3">
                                 <MdOutlineDone className={styles.iconDesc} />
-                                <p className={`m-0 ${styles.pDesc}`}>Lorem ipsum dolor sit amet.</p>
+                                <p className={`m-0 ${styles.pDesc}`}>Talent terverifikasi.</p>
                             </div>
                             <div className="d-flex align-items-center mb-3">
                                 <MdOutlineDone className={styles.iconDesc} />
-                                <p className={`m-0 ${styles.pDesc}`}>Lorem ipsum dolor sit amet.</p>
+                                <p className={`m-0 ${styles.pDesc}`}>Berpengalaman di bidangnya.</p>
                             </div>
                             <div className="d-flex align-items-center mb-3">
                                 <MdOutlineDone className={styles.iconDesc} />
-                                <p className={`m-0 ${styles.pDesc}`}>Lorem ipsum dolor sit amet.</p>
+                                <p className={`m-0 ${styles.pDesc}`}>Unggul dalam profesionalitas.</p>
                             </div>
                             <div className="d-flex align-items-center mb-3">
                                 <MdOutlineDone className={styles.iconDesc} />
-                                <p className={`m-0 ${styles.pDesc}`}>Lorem ipsum dolor sit amet.</p>
+                                <p className={`m-0 ${styles.pDesc}`}>Menguasai tren terkini.</p>
                             </div>
                         </div>
                     </div>
@@ -101,7 +101,7 @@ const IndexLayout = (data) => {
                     <div className="col-lg-6 col-12 pt-5">
                         <div className={`${styles.headerDesc}`}>
                             <h3 className={`${styles.titleDesc} mb-4`}>Skill Talent</h3>
-                            <p className={`${styles.pDesc}`}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In euismod ipsum et dui rhoncus auctor.</p>
+                            <p className={`${styles.pDesc}`}>Berbagai skill yang dikuasai oleh talent kami tentu berperan penting dalam development.</p>
                             <div className="row">
                                 <div className="col-6">
                                     <div className="d-flex align-items-center mb-3">

@@ -13,7 +13,7 @@ const FooterLayout = () => {
                     </div>
                     <hr />
                     <div className="col-12 d-flex justify-content-between py-2">
-                        <p className="footerDetail2">2022 Pewworld. All right reserved</p>
+                        <p className="footerDetail2">2022 Peworld. All right reserved</p>
                         <div className="d-flex footerDetail3">
                             <a href="#" target={'_blank'} className="text-decoration-none text-white">Telepon</a>
                             <a href="#" target={'_blank'} className="text-decoration-none text-white mx-3">Email</a>
