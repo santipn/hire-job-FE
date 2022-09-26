@@ -7,7 +7,7 @@ import { BsTrash } from 'react-icons/bs'
 import { useEffect, useState } from 'react'
 import useVerify from '../../lib/useVerify'
 import { useSelector, useDispatch } from 'react-redux'
-import { GetBySlug, GetUserExperience, GetPortfolio, GetSkills, UpdateUser, AddSkill, RemoveSkill, AddExperience, RemoveExperience } from '../../redux/actions/users'
+import { GetBySlug, GetUserExperience, GetPortfolio, GetSkills, UpdateUser, AddSkill, RemoveSkill, AddExperience, RemoveExperience } from '../../redux/actions/Users'
 import axios from 'axios'
 import useSWR from 'swr'
 const urlImage = process.env.NEXT_PUBLIC_URL_IMAGE
